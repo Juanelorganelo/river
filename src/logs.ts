@@ -12,8 +12,6 @@ import { formatShortDate } from "./dates";
 
 const FILTER_LOG_EVENTS_PAGE_SIZE = 500;
 
-const client = new CloudWatchLogsClient({ maxAttempts: 3 });
-
 /**
  * A CloudWatch log event with the exception that
  * the Log type replaces the "message" property with "record".
@@ -47,6 +45,10 @@ export function printLogEvents(events: Log[], options?: PrintLogEventsOptions): 
  */
 export interface PaginateLogEventsOptions {
   /**
+   * The URL to the AWS endpoint to use.
+   */
+  endpointURL?: string;
+  /**
    * The end of the date range to get logs from.
    */
   stop?: Date;
@@ -71,6 +73,10 @@ export interface PaginateLogEventsOptions {
  * @param options Pagination and filtering options.
  */
 export async function* paginateLogEvents(logGroup: string, options?: PaginateLogEventsOptions): AsyncGenerator<Log[], any, any> {
+  const client = new CloudWatchLogsClient({
+    endpoint: options?.endpointURL,
+    maxAttempts: 3,
+  });
   const logEventPaginator = paginateFilterLogEvents(
     {
       client,

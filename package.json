@@ -17,14 +17,16 @@
     "date-fns": "^2.25.0",
     "date-fns-tz": "^1.1.6",
     "jsonpath": "^1.1.1",
-    "tslib": "^2.3.1"
+    "strip-json-comments": "3.1.1",
+    "tslib": "^2.3.1",
+    "yaml": "^1.10.2"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1.26.0",
     "@oclif/test": "^1.2.8",
     "@types/chai": "^4.2.22",
     "@types/mocha": "^9.0.0",
-    "@types/node": "^16.11.2",
+    "@types/node": "^16.11.12",
     "@typescript-eslint/eslint-plugin": "^5.1.0",
     "@typescript-eslint/parser": "^5.1.0",
     "chai": "^4.3.4",
@@ -68,6 +70,7 @@
     "prepack": "rm -rf lib && tsc --project tsconfig.build.json && oclif-dev manifest && oclif-dev readme",
     "lint": "eslint . --ext .ts",
     "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\"",
+    "build": "rm -rf build && tsc --project tsconfig.build.json",
     "version": "oclif-dev readme && git add README.md"
   }
 }

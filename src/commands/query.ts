@@ -9,6 +9,14 @@ import { query } from "../json-query";
 import { toTimeZone } from "../time-zone";
 import { parseShortDate } from "../dates";
 import { paginateLogEvents, printLogEvents } from "../logs";
+import { load } from "../config";
+
+function getZonedDate(date: Date, timeZone?: string): Date {
+  if (timeZone) {
+    return toTimeZone(date, { to: timeZone });
+  }
+  return date;
+}
 
 /**
  * Command to query logs from CloudWatch optionally filtered by a JSONPath query.
@@ -40,6 +48,10 @@ export default class QueryCommand extends Command {
       description:
         "Optional time zone. Logs will be filtered using this time zone if to or from are provided in addition to dates being printed in the specified time zone",
     }),
+    endpointURL: flags.string({
+      description:
+        "A custom endpoint passed to the AWS SDK. This allows the SDK to get resources from other AWS-compatible APIs e.g. LocalStack",
+    }),
     logStreamNames: flags.string({
       multiple: true,
       description: "Names of log streams to get logs from",
@@ -54,34 +66,30 @@ export default class QueryCommand extends Command {
   public async run() {
     const { flags, args } = this.parse(QueryCommand);
 
-    const stop = flags.to ? parseShortDate(flags.to, flags.timeZone) : this.getZonedDate(new Date(), flags.timeZone);
-    const start = flags.from ? parseShortDate(flags.from, flags.timeZone) : this.getZonedDate(startOfDay(new Date()), flags.timeZone);
+    const config = await load(flags);
+
+    const stop = config.to ? parseShortDate(config.to, config.timeZone) : getZonedDate(new Date(), config.timeZone);
+    const start = config.from ? parseShortDate(config.from, config.timeZone) : getZonedDate(startOfDay(new Date()), config.timeZone);
 
     const logsPaginator = paginateLogEvents(args.logGroupName, {
+      endpointURL: config.endpointURL,
       stop,
       start,
-      logStreamNames: flags.logStreamNames,
-      logStreamNamePrefix: flags.logStreamNamePrefix,
+      logStreamNames: config.logStreamNames,
+      logStreamNamePrefix: config.logStreamNamePrefix,
     });
 
     try {
       for await (const logsPage of logsPaginator) {
-        if (flags.query) {
-          const result = query(logsPage, flags.query);
-          printLogEvents(result, { indent: flags.indent });
+        if (config.query) {
+          const result = query(logsPage, config.query);
+          printLogEvents(result, { indent: config.indent });
         } else {
-          printLogEvents(logsPage, { indent: flags.indent });
+          printLogEvents(logsPage, { indent: config.indent });
         }
       }
     } catch (error) {
       console.log(error);
     }
-  }
-
-  private getZonedDate(date: Date, timeZone?: string): Date {
-    if (timeZone) {
-      return toTimeZone(date, { to: timeZone });
-    }
-    return date;
   }
 }
