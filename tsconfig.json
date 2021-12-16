@@ -6,6 +6,7 @@
     "rootDir": ".",
     "strict": true,
     "target": "es2017",
+    "composite": true,
     "declaration": true,
     "importHelpers": true,
     "esModuleInterop": true
