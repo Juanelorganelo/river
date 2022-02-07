@@ -72,7 +72,7 @@ export interface PaginateLogEventsOptions {
  * @param logGroup The name of the CloudWatch log group.
  * @param options Pagination and filtering options.
  */
-export async function* paginateLogEvents(logGroup: string, options?: PaginateLogEventsOptions): AsyncGenerator<Log[], any, any> {
+export async function* paginateLogEvents(logGroup: string, options?: PaginateLogEventsOptions): AsyncGenerator<Log[]> {
   const client = new CloudWatchLogsClient({
     endpoint: options?.endpointURL,
     maxAttempts: 3,
@@ -119,7 +119,7 @@ function swapProperty<T extends Record<string, unknown>, K extends keyof T, V ex
   return value as any;
 }
 
-function safeJSONParse(json: string | undefined): any {
+function safeJSONParse(json: string | undefined): unknown {
   try {
     return JSON.parse(json!);
   } catch (error) {
