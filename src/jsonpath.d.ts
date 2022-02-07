@@ -116,11 +116,7 @@ declare module "jsonpath" {
      * @param count Number of elements to return. If not specified will retrun ALL matching elements.
      * @return The list of query nodes.
      */
-    nodes<T extends JSONObject, R = unknown>(
-      json: T,
-      query: string,
-      count?: number
-    ): QueryNode<R>[];
+    nodes<T extends JSONObject, R = unknown>(json: T, query: string, count?: number): QueryNode<R>[];
     /**
      * Returns the value of the first element matching `query`.
      *
@@ -146,11 +142,7 @@ declare module "jsonpath" {
      * @param callback The transformation callback.
      * @return List of transformed query results
      */
-    apply<T extends JSONObject, R, V = unknown>(
-      json: T,
-      query: string,
-      callback: (value: V) => R
-    ): R[];
+    apply<T extends JSONObject, R, V = unknown>(json: T, query: string, callback: (value: V) => R): R[];
     /**
      * Returns a path expression in string form, given a path. The supplied path may either be a flat array of keys, as returned by jp.nodes for example, or may alternatively be a fully parsed path expression in the form of an array of path components as returned by jp.parse
      *
