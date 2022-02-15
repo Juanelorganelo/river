@@ -16,7 +16,7 @@ const FILTER_LOG_EVENTS_PAGE_SIZE = 500;
  * A CloudWatch log event with the exception that
  * the Log type replaces the "message" property with "record".
  */
-export type Log = Omit<FilteredLogEvent, "message"> & { record: any };
+export type Log = Omit<FilteredLogEvent, "message"> & { record: unknown };
 
 /**
  * Available options passed to the printLogEvents function.
