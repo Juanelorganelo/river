@@ -1,7 +1,8 @@
 # river
 =========
 
-# :warning: This is a work-in-progress
+# Warning :warning:
+This is a work-in-progress, use it at your own risk
 
 A CLI to query CloudWatch Logs with additional features for JSON logs.
 
