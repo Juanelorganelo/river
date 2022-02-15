@@ -1,6 +1,8 @@
 # river
 =========
 
+# :warning: This is a work-in-progress
+
 A CLI to query CloudWatch Logs with additional features for JSON logs.
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
